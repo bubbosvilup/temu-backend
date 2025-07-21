@@ -20,9 +20,17 @@ app.get("/parse", async (req, res) => {
       return html.match(regex)?.[1] || null;
     };
 
-    const image = getMeta("og:image");
+    const ogImage = getMeta("og:image");
+    const fallbackImg =
+      html.match(
+        /<img[^>]+src=["'](https:\/\/[^"']+?\.(?:jpe?g|png|webp))["']/i
+      )?.[1] || null;
+    const image = ogImage || fallbackImg;
+
     const title =
-      getMeta("og:title") || html.match(/<title>(.*?)<\/title>/i)?.[1];
+      getMeta("og:title") ||
+      html.match(/<title>(.*?)<\/title>/i)?.[1] ||
+      "Unnamed product";
 
     res.json({ image, title });
   } catch (err) {
