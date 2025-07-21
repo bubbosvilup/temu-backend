@@ -87,6 +87,14 @@ app.get("/parse", async (req, res) => {
       }
     }
 
+    // fallback 4: estrae immagine da query string top_gallery_url
+    if (!image && url.includes("top_gallery_url=")) {
+      const match = url.match(/top_gallery_url=([^&]+)/);
+      if (match) {
+        image = decodeURIComponent(match[1]);
+      }
+    }
+
     // Estrai titolo con più fallback
     let title = getMeta("og:title") || getMeta("twitter:title");
 
